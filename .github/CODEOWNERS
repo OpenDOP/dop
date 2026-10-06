@@ -1,0 +1,22 @@
+# Code owners for OpenDOP/dop
+#
+# Ownership means the last word in review, not exclusive access.
+# The last matching pattern wins, so the shared entries are listed last.
+
+# Everything not matched below is reviewed by both maintainers.
+*                   @merttemiz @hasan4adnan
+
+# Maintainer A — platform
+/contracts/         @merttemiz
+/core/              @merttemiz
+/infrastructure/    @merttemiz
+
+# Maintainer B — intelligence and experience
+/analytics/         @hasan4adnan
+/web/               @hasan4adnan
+/examples/          @hasan4adnan
+/scripts/           @hasan4adnan
+/.github/           @hasan4adnan
+
+# Shared: documentation, decisions, and the root surface
+/docs/              @merttemiz @hasan4adnan
