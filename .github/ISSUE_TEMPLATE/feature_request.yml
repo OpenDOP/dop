@@ -1,0 +1,57 @@
+name: Feature request
+description: Propose a concrete piece of work.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Open an issue for a **concrete** proposal. If you are still exploring the idea, start in
+        [Discussions](https://github.com/OpenDOP/dop/discussions).
+
+        Please read [docs/roadmap.md](https://github.com/OpenDOP/dop/blob/main/docs/roadmap.md)
+        first. A request that does not belong to the current phase is not refused — it is
+        labelled `backlog` and scheduled.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you are trying to do and where DOP gets in the way. Describe the need, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you propose
+      description: What should exist. Concrete enough that someone could tell whether it had been built.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including working around it, and doing nothing.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - contracts
+        - core
+        - analytics
+        - web
+        - infrastructure
+        - examples
+        - scripts
+        - docs
+        - not sure
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before you submit
+      options:
+        - label: I have read docs/roadmap.md and this is not already a later phase's work.
+          required: true
+        - label: This request contains no secrets, credentials, real telemetry or personal data.
+          required: true
