@@ -4,26 +4,29 @@
 **Phase:** 1 (v0.1.0 "Log Explorer")
 **Opened:** Not recorded in the repository — **Closed:** Pending
 **Owners:** both maintainers (@merttemiz, @hasan4adnan)
-**Status:** Draft closure record; local implementation verified, final acceptance pending
+**Status:** Draft closure record; local and GitHub Linux CI verification passed, maintainer sign-off pending
 **Rounds:** Read-only discovery; toolchain preparation; contract foundation; generation;
 standalone consumption; interoperability; rename experiment; review and documentation;
 contracts-only CI implementation
 
 ## 1. Result
 
-The WP2 contract foundation is implemented in the working tree. One Protobuf message,
+The WP2 contract foundation is implemented in commit
+`3a768139250e692863999599a9c99a51d0e4f8ab`, submitted in
+[PR #3](https://github.com/OpenDOP/dop/pull/3). One Protobuf message,
 `dop.common.v1.EventMetadata`, is generated for Java and Python. Standalone consumers,
 bidirectional golden-file tests and an isolated field-renaming experiment have been
 verified locally on Windows. The contract conventions and contributor commands are
 documented in [contracts/README.md](../../contracts/README.md).
 
-The contracts-only GitHub Actions workflow is **IMPLEMENTED but NOT YET VERIFIED ON
-GITHUB**. The feature branch has not been pushed and no WP2 pull request has been opened,
-as reported by the maintainer. There is no GitHub run result to record. Local success is
-not evidence of a clean Linux runner passing.
+The contracts-only GitHub Actions workflow is **IMPLEMENTED AND VERIFIED ON GITHUB**.
+[Contracts CI run 39327276011](https://github.com/OpenDOP/dop/actions/runs/39327276011)
+completed successfully on a clean Ubuntu runner, including both golden-file directions.
+It tested the temporary PR merge commit, rather than checking out the PR head directly;
+section 6 records both identities and the actual execution times.
 
-**WP2 is not fully closed.** Its remaining acceptance evidence is a successful real
-GitHub CI run and final maintainer review/sign-off. Integration with the real core and
+**WP2 is not fully closed.** Final maintainer review/sign-off remains pending despite
+the successful real GitHub CI run. Integration with the real core and
 analytics applications is explicitly deferred to WP3 and WP4, respectively; it is not
 unfinished WP2 implementation. Sections 3, 6 and 7 distinguish these responsibilities.
 
@@ -44,9 +47,9 @@ unfinished WP2 implementation. Sections 3, 6 and 7 distinguish these responsibil
 | Conventions, setup, commands, fixture values and rename evidence | `contracts/README.md` |
 | Contracts-only Linux CI workflow | `.github/workflows/contracts-ci.yml` |
 
-These are working-tree deliverables, not a claim that a WP2 commit or merge exists. In
-particular, the two golden fixtures are intended for version control but are currently
-untracked, along with the other new WP2 files. Generated source code is excluded.
+The original WP2 implementation commit includes these deliverables and both retained
+golden fixtures. PR #3 is open; the temporary PR test merge is not a merge into `main`.
+Generated source code is excluded from version control.
 
 ### Contract shape and conventions
 
@@ -142,13 +145,13 @@ Gradle subprocesses also fail the runner. Normal runs never rewrite retained fix
 The four acceptance requirements below are drawn from the Phase 1 Reference Roadmap,
 Revision 1, section 6.2, and were checked against the supplied roadmap PDF during final
 document review. The repository implementation and actual local results provide the
-verification evidence; CI evidence remains pending.
+verification evidence, supplemented by the real GitHub Linux run recorded in section 6.
 
 | Roadmap section 6.2 requirement | Implementation | Local verification | GitHub CI verification | Remaining WP2 evidence |
 |:--|:--|:--|:--|:--|
-| 1. `buf lint` and `buf format --diff` are clean | Implemented in the workspace and workflow | Passed; lint and non-mutating `buf format --diff --exit-code` both exit `0` | Pending; workflow has not run on GitHub | Record the real workflow result; local checks are already verified |
-| 2. Java and Python builds both import the generated classes | Implemented by the standalone Java library/verifier and Python verification environment under `contracts/` | Passed; Java compiles and consumes the generated class, Python imports it and passes both unittest cases | Pending; both consumers are included in the workflow | GitHub run evidence; real application integration belongs to WP3/WP4, not this criterion |
-| 3. The cross-language golden-file test passes in CI | Both directions implemented, with separate workflow steps | Passed in both directions, against fresh outputs and retained fixtures | **Pending — acceptance requirement not yet met in CI** | Successful real GitHub run, run URL, tested commit SHA and verification date |
+| 1. `buf lint` and `buf format --diff` are clean | Implemented in the workspace and workflow | Passed; lint and non-mutating `buf format --diff --exit-code` both exit `0` | Passed in run 39327276011; lint and formatting steps succeeded | Maintainer review/sign-off |
+| 2. Java and Python builds both import the generated classes | Implemented by the standalone Java library/verifier and Python verification environment under `contracts/` | Passed; Java compiles and consumes the generated class, Python imports it and passes both unittest cases | Passed in run 39327276011; Java compiled on Linux and Python ran both tests | Maintainer review/sign-off; real application integration belongs to WP3/WP4, not this criterion |
+| 3. The cross-language golden-file test passes in CI | Both directions implemented, with separate workflow steps | Passed in both directions, against fresh outputs and retained fixtures | **Passed in real GitHub Linux CI**, run 39327276011; both direction steps succeeded | Maintainer review/sign-off; run URL, tested SHA and verification date are recorded in section 6 |
 | 4. A deliberately renamed field makes both consumers fail to compile or parse, demonstrated once with raw output | Completed isolated experiment; original consumers unchanged | Java compilation failed on missing accessors; Python message construction failed with `ValueError`; genuine output is retained in section 6 | Not part of the routine workflow; this is the required one-time demonstration | No further experiment is pending; maintainer review of the recorded evidence remains pending |
 
 For requirement 4, the roadmap wording is interpreted according to the actual failure:
@@ -166,14 +169,15 @@ Supporting implementation and review checks remain documented separately:
 | Generated code excluded from Git | Verified locally | Scoped ignore rules and `git check-ignore` checks |
 | Incorrect values cause verification failure | Met locally | Ten rejected cases in each reader |
 | Contract conventions and contributor instructions | Implemented | `contracts/README.md` |
-| Contracts checks execute together on clean Linux GitHub runner | Implemented, NOT YET VERIFIED ON GITHUB | Workflow exists; run URL, tested SHA, result and date pending |
+| Contracts checks execute together on clean Linux GitHub runner | Verified on GitHub | Run 39327276011, job `Contracts (Linux)`, completed successfully; section 6 records the evidence |
 | Final review and closure approval | Pending | Both maintainer sign-offs in section 8 |
 
 The standalone consumers fulfill WP2's local generated-code consumption proof; they are
 not the future core or analytics applications. WP3 owns the real Java core skeleton and
 integration; WP4 owns the real Python analytics skeleton and integration. Those deferred
-deliverables are not additional WP2 acceptance gates. Requirement 3 remains pending
-regardless of local success. General CI and release automation remain assigned to WP6;
+deliverables are not additional WP2 acceptance gates. Requirement 3 now has real GitHub
+CI evidence; final acceptance still requires maintainer review/sign-off. General CI and
+release automation remain assigned to WP6;
 only the agreed contracts-specific CI exception is implemented here.
 
 ## 4. Decisions closed in WP2
@@ -218,8 +222,9 @@ The evidence below comes from actual WP2 implementation/validation rounds, most 
 the contracts-only CI implementation round. It is not a new test run performed while
 drafting this record. Local tools were Buf `1.73.0`, Temurin/Javac `21.0.12.1`, Python
 `3.12.15` and uv `0.12.23` on Windows. Java compilation succeeded in the consumption
-implementation round; subsequent runs reused up-to-date compilation outputs. No clean
-Linux build is claimed.
+implementation round; subsequent local runs reused up-to-date compilation outputs.
+These local results alone do not prove a clean Linux build; the separate GitHub run
+recorded below provides that evidence.
 
 With the pinned tools on PATH, the following are the local PowerShell commands, starting
 at the repository root:
@@ -310,17 +315,20 @@ and a frozen lock with artifact hashes. No global Gradle or local `protoc` is re
 
 Ignore checks cover `build/generated/`, `build/interop/`, Java build/cache directories,
 the Python virtual environment and bytecode cache. Wrapper files, locks, handwritten
-tests and the two retained fixtures are intended to be tracked. They are not ignored.
-Whitespace checks covered tracked modifications and untracked text files separately.
+tests and the two retained fixtures are tracked in the implementation commit. They are
+not ignored. Pre-commit whitespace checks covered tracked modifications and untracked
+text files separately.
 
-The current branch is `feat/wp2-contracts-foundation`. Before this record was added,
-Git reported one modified tracked file (`contracts/README.md`) and 21 untracked WP2
-files, including the workflow. This record is an additional untracked document. Existing
-work has not been staged or discarded. No WP2 commit, PR or merge identifier is asserted.
+The current branch is `feat/wp2-contracts-foundation`. The original WP2 implementation
+commit is `3a768139250e692863999599a9c99a51d0e4f8ab`, titled
+`feat(contracts): add WP2 contract foundation and verification`. It contains the 23 WP2
+files, including this closure record, and is the head commit of open
+[PR #3](https://github.com/OpenDOP/dop/pull/3) at evidence verification time.
+This documentation-only evidence update does not change the tested implementation.
 
-### Contracts-only workflow and pending GitHub evidence
+### Contracts-only workflow and verified GitHub evidence
 
-The workflow is **IMPLEMENTED but NOT YET VERIFIED ON GITHUB**. It triggers on pull
+The workflow is **IMPLEMENTED AND VERIFIED ON GITHUB**. It triggers on pull
 requests targeting `main` when `contracts/**` or the workflow itself changes. One job,
 `Contracts (Linux)`, uses `ubuntu-24.04`, Bash and a 20-minute timeout. Default command
 working directory is `contracts/`, with Python steps using `contracts/python/`.
@@ -353,29 +361,78 @@ Local workflow validation passed with checksum-verified temporary `actionlint 1.
 all nine `run` steps passed Git Bash syntax checks. These are syntax checks, not Linux
 execution. The POSIX Wrapper has LF line endings. It is invoked with `sh`, so no
 executable bit is required; the Python runner selects this path on non-Windows hosts.
-The local Docker Linux engine was unavailable and no general-purpose Linux WSL
-distribution was available. Network access to Buf and first-time tool/dependency
+At the local workflow validation stage, the Docker Linux engine was unavailable and no
+general-purpose Linux WSL distribution was available. Linux execution has since passed
+on GitHub's hosted runner. Network access to Buf and first-time tool/dependency
 downloads remains a requirement of a fresh runner.
 
-**Pending evidence — complete only after observing the real GitHub run:**
+**Verified GitHub evidence — inspected through the GitHub API and actual job logs:**
 
 | Evidence field | Value |
 |:--|:--|
-| GitHub Actions run URL | **Pending** |
-| Tested commit SHA | **Pending** |
-| Actual CI result | **Pending — workflow has not executed on GitHub** |
-| Date of verification | **Pending** |
+| GitHub Actions run URL | [Contracts CI — run 39327276011](https://github.com/OpenDOP/dop/actions/runs/39327276011) |
+| Event / attempt | `pull_request` / `1` |
+| Job | [Contracts (Linux) — job 118316255489](https://github.com/OpenDOP/dop/actions/runs/39327276011/job/118316255489) |
+| Actual CI result | Run and job `completed`, conclusion `success` |
+| Runner image | `ubuntu-24.04`, image version `20261018.339.1` |
+| Pull request | [OpenDOP/dop #3](https://github.com/OpenDOP/dop/pull/3), open |
+| PR head / original WP2 implementation commit | `3a768139250e692863999599a9c99a51d0e4f8ab` |
+| Tested checkout commit | `2545f6f22f12f4780922017fac7cc2c1f9c55ced` — temporary `refs/pull/3/merge` commit |
+| Base commit used for the test merge | `1a47afaafa7591ad45830d84c94a2aac84194b68` |
+| Run started / completed (UTC) | `2026-10-19T21:24:45Z` / `2026-10-19T21:25:30Z` |
+| Run started / completed (Europe/Istanbul, UTC+03:00) | `2026-10-20 00:24:45` / `2026-10-20 00:25:30` |
+| Date of evidence verification | `2026-10-20` |
 
-After a maintainer commits/pushes the branch and opens a PR targeting `main`, inspect
-the actual `Contracts CI` run, including both golden steps. Record its URL, tested SHA,
-result and verification date here. Investigate failures instead of retrying until green.
-Do not fill these fields from local results or action dependency commit SHAs.
+The run API's `head_sha` identifies the PR head, `3a768139250e692863999599a9c99a51d0e4f8ab`.
+The checkout log instead confirms `HEAD` at `2545f6f22f12f4780922017fac7cc2c1f9c55ced`.
+The GitHub commit API confirms that this temporary merge has the base and PR head above
+as its two parents. It tests their combined tree without merging PR #3 into `main`.
+This evidence applies to that tested tree, not to untested later implementation changes.
+
+All of the following actual job steps completed with conclusion `success`:
+
+| Job step | Result |
+|:--|:--|
+| Check out repository | Success |
+| Set up Java 21 | Success |
+| Set up Buf | Success |
+| Set up uv | Success |
+| Verify tool versions | Success |
+| Lint Protobuf contracts | Success |
+| Check Protobuf formatting | Success |
+| Generate Java and Python contracts | Success |
+| Compile Java contracts and verify consumption | Success |
+| Prepare locked Python environment | Success |
+| Verify Python consumption | Success |
+| Verify Java to Python golden files | Success |
+| Verify Python to Java golden files | Success |
+
+Relevant raw excerpts from this GitHub job, distinct from the local evidence above:
+
+```text
+PASS: generated EventMetadata imported and all six fields verified
+PASS: Java binary round-trip preserves strings and timestamp nanoseconds
+BUILD SUCCESSFUL in 12s
+4 actionable tasks: 4 executed
+Ran 2 tests in 0.000s
+PASS: Java -> Python: build/interop/java.bin; all six fields, seconds and nanos
+PASS: Java -> Python: fixtures/java.bin; all six fields, seconds and nanos
+PASS: Python verifier rejected all 10 incorrect-value/presence cases
+PASS: Python -> Java: build/interop/python.bin; all six fields, seconds and nanos
+PASS: Python -> Java: fixtures/python.bin; all six fields, seconds and nanos
+PASS: Java verifier rejected all 10 incorrect-value/presence cases
+```
+
+The locked Python setup installed CPython `3.12.15` and `protobuf==7.35.1` on Linux.
+The Java check executed its compilation and verification tasks rather than relying on
+the earlier Windows outputs. This run verifies Linux portability of the existing
+contracts-only commands; it does not deliver general WP6 CI or application integration.
 
 ## 7. Carried forward
 
 | Item | Owner / acts in |
 |:--|:--|
-| Obtain real contracts-only GitHub Actions evidence, including both golden directions on Linux | WP2-specific exception; both maintainers review the run |
+| Review the recorded successful contracts-only Linux CI run and both golden directions | Both maintainers; evidence obtained under the WP2-specific exception |
 | Integrate generated Java contracts into the real core application build | WP3 |
 | Integrate generated Python contracts into the real analytics application build | WP4 |
 | General changed-path CI, application/web CI, release automation and repository status-check settings | WP6; not delivered by this exception |
@@ -383,10 +440,11 @@ Do not fill these fields from local results or action dependency commit SHAs.
 | Event identity implementation and acceptance of draft ADR-015 | WP9 |
 | Principal/scope implementation and acceptance of draft ADR-016 | WP10 |
 | Required Buf breaking gate using `v0.1.0` as baseline | At the `v0.1.0` tag |
-| Review the section 6.2 acceptance evidence and approve the final closure after CI passes | Both maintainers |
+| Review the section 6.2 acceptance evidence and record final closure approval/date | Both maintainers; pending |
 | Confirm any still-open WP1 repository-settings checklist items | Maintainers; no GitHub settings were re-verified in WP2 |
 
-The first row is remaining WP2 acceptance evidence; WP3/WP4 application integration and
+The remaining WP2 closure action is maintainer review/sign-off; the required Linux CI
+evidence is now recorded. WP3/WP4 application integration and
 general WP6 automation are deferred work belonging to those packages. Later application
 integration must reuse the same schema and generation pins rather than treating standalone
 test environments as production skeletons. Passing the first CI run does not complete
@@ -397,6 +455,10 @@ the future application skeletons to be implemented early.
 
 **Pending.** This is an evidence record prepared for review, not a signed closure.
 
+PR #3 requests review from @hasan4adnan. At evidence verification time, GitHub reported
+no submitted PR reviews. A review request and a successful CI run are not maintainer
+approvals; neither maintainer sign-off nor the final closure date is inferred from them.
+
 | Maintainer | Role | Approval | Date |
 |:--|:--|:--|:--|
 | @merttemiz | Maintainer A | Pending | Pending |
@@ -405,5 +467,5 @@ the future application skeletons to be implemented early.
 Both maintainers must review the contract change and the actual CI evidence against the
 four WP2 requirements, and record their own approval/date before a final closure date is
 entered. Deferred WP3/WP4/WP6 deliverables retain their own work-package ownership.
-No signature, approval, completion
-date, CI run URL, WP2 commit SHA, PR number or merge commit is fabricated by this record.
+The CI, PR and commit identifiers above are verified GitHub evidence. No signature,
+approval, final closure date or merge into `main` is asserted by this record.
