@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package dop.common.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "io.github.opendop.contracts.common.v1";
+
+// EventMetadata carries the common identity and timing information of an event.
+message EventMetadata {
+  // Identifier assigned by DOP, never taken from the sender.
+  string event_id = 1;
+  // Tenant assigned by core.
+  string tenant_id = 2;
+  // Project assigned by core.
+  string project_id = 3;
+  // Deployment environment from the resource attributes.
+  string environment = 4;
+  // Time the event happened at the source.
+  google.protobuf.Timestamp occurred_at = 5;
+  // Time the event was observed by the telemetry pipeline.
+  google.protobuf.Timestamp observed_at = 6;
+}
